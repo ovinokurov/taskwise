@@ -2,7 +2,7 @@
 
 TaskWise is a modern, AI-driven task management application built with Next.js, TypeScript, and PostgreSQL. It's designed to help you manage your tasks more intelligently by leveraging the power of AI for task creation, reporting, and querying.
 
-![TaskWise Screenshot](https://i.imgur.com/YOUR_SCREENSHOT_URL.png) <!-- TODO: Add a screenshot of the application -->
+[A screenshot of the application will be added here.]
 
 ## ✨ Key Features
 
