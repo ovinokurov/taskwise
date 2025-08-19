@@ -19,7 +19,7 @@ export async function GET() {
       }
     }).filter(Boolean); // Remove null entries
     return NextResponse.json(logEntries);
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     console.error('Error in raw-logs API:', error);
     if (error.code === 'ENOENT') {
       return NextResponse.json([]); // Return empty array if file not found

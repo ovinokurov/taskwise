@@ -74,7 +74,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(aiResponse);
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     console.error('Error in suggest-task API:', error);
     // Provide more specific error details if possible
     if (error.response) {

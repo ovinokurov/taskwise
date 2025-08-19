@@ -96,7 +96,7 @@ export async function GET() {
 
     return NextResponse.json({ report: reportData });
 
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     console.error('Error in analyze-logs API:', error);
     if (error.code === 'ENOENT') {
       return NextResponse.json({ report: "No activity has been logged yet. Complete some tasks first." });

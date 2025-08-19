@@ -25,7 +25,16 @@ export default function Home() {
       const response = await fetch('/api/events');
       if (!response.ok) throw new Error('Failed to fetch events');
       const data = await response.json();
-      setEvents(data.map((event: any) => ({ ...event, start: new Date(event.start), end: new Date(event.end) })));
+      interface ApiEvent {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+}
+
+// ...
+
+      setEvents(data.map((event: ApiEvent) => ({ ...event, start: new Date(event.start), end: new Date(event.end) })));
     } catch (error) { console.error(error); }
   }, []);
 

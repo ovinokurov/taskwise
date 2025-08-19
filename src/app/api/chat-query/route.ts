@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     });
 
     // 2. Read all log entries from analytics.log
-    let logEntries: any[] = [];
+    let logEntries: LogEntry[] = [];
     try {
       const logFileContent = await fs.readFile(logFilePath, 'utf-8');
       logEntries = logFileContent.trim().split('\n').map(line => {
@@ -44,8 +44,8 @@ export async function POST(request: Request) {
           console.error('Error parsing log line in chat-query:', line, e);
           return null;
         }
-      }).filter(Boolean);
-    } catch (e: any) {
+      }).filter(Boolean) as LogEntry[];
+    } catch (e: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       if (e.code === 'ENOENT') {
         console.log('analytics.log not found for chat query.');
       } else {
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ answer: aiAnswer });
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     console.error('Error in chat-query API:', error);
     if (error.response) {
       console.error('OpenAI API Error Status:', error.response.status);
