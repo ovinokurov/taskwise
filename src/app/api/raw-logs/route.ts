@@ -4,6 +4,35 @@ import path from 'path';
 
 const logFilePath = path.join(process.cwd(), 'analytics.log');
 
+/**
+ * @swagger
+ * /api/raw-logs:
+ *   get:
+ *     summary: Retrieves raw log entries.
+ *     description: Reads and returns all log entries from the `analytics.log` file. Each line in the log file is expected to be a JSON object. Malformed lines are skipped.
+ *     responses:
+ *       200:
+ *         description: An array of raw log entries.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 description: A single log entry, structure depends on logged data.
+ *       500:
+ *         description: Internal Server Error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal Server Error"
+ *                 details:
+ *                   type: string
+ */
 export async function GET() {
   try {
     const logFileContent = await fs.readFile(logFilePath, 'utf-8');

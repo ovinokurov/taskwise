@@ -6,6 +6,73 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+/**
+ * @swagger
+ * /api/suggest-task:
+ *   post:
+ *     summary: Generates a task suggestion using AI.
+ *     description: Takes a user's raw task idea and uses an AI model (ChatGPT) to transform it into a well-defined task with a title, description, priority, time estimate, and an optional due date.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userInput
+ *             properties:
+ *               userInput:
+ *                 type: string
+ *                 description: The user's raw task idea.
+ *                 example: "plan the quarterly marketing campaign"
+ *     responses:
+ *       200:
+ *         description: AI-generated task suggestion.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 title:
+ *                   type: string
+ *                   description: A concise, improved title for the task.
+ *                 description:
+ *                   type: string
+ *                   description: A detailed and actionable description for the task.
+ *                 priority:
+ *                   type: string
+ *                   enum: [LOW, MEDIUM, HIGH, URGENT]
+ *                   description: The estimated priority of the task.
+ *                 timeEstimate:
+ *                   type: number
+ *                   description: The estimated time to complete the task in minutes (integer).
+ *                 dueDate:
+ *                   type: string
+ *                   format: date-time
+ *                   nullable: true
+ *                   description: The suggested due date and time in ISO 8601 format. Null if not specified.
+ *       400:
+ *         description: Bad Request - User input is required.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "User input is required"
+ *       500:
+ *         description: Internal Server Error or OpenAI API Error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                 details:
+ *                   type: string
+ */
 export async function POST(request: Request) {
   try {
     const body = await request.json();

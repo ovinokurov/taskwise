@@ -10,6 +10,107 @@ const openai = new OpenAI({
 
 const logFilePath = path.join(process.cwd(), 'analytics.log');
 
+/**
+ * @swagger
+ * /api/analyze-logs:
+ *   get:
+ *     summary: Generates a productivity report based on user task logs.
+ *     description: Analyzes task creation and completion events from `analytics.log` and uses AI to generate a comprehensive report on user productivity patterns, habits, and areas for improvement.
+ *     responses:
+ *       200:
+ *         description: A detailed productivity report.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 report:
+ *                   type: object
+ *                   properties:
+ *                     summaryText:
+ *                       type: string
+ *                       description: A detailed, markdown-formatted textual summary of the user's productivity.
+ *                     keyMetrics:
+ *                       type: object
+ *                       properties:
+ *                         totalCreated:
+ *                           type: number
+ *                         totalCompleted:
+ *                           type: number
+ *                         completionRate:
+ *                           type: number
+ *                           format: float
+ *                         averageOverallCompletionTime:
+ *                           type: number
+ *                           format: float
+ *                     chartData:
+ *                       type: object
+ *                       properties:
+ *                         tasksByPriority:
+ *                           type: object
+ *                           additionalProperties:
+ *                             type: object
+ *                             properties:
+ *                               created:
+ *                                 type: number
+ *                               completed:
+ *                                 type: number
+ *                         tasksByCategory:
+ *                           type: object
+ *                           additionalProperties:
+ *                             type: object
+ *                             properties:
+ *                               created:
+ *                                 type: number
+ *                               completed:
+ *                                 type: number
+ *                         avgCompletionTimes:
+ *                           type: object
+ *                           additionalProperties:
+ *                             type: string
+ *                     categorizedTasksGrid:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           category:
+ *                             type: string
+ *                           created:
+ *                             type: number
+ *                           completed:
+ *                             type: number
+ *                           completionRate:
+ *                             type: number
+ *                             format: float
+ *                           avgTime:
+ *                             type: number
+ *                             format: float
+ *                     insights:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *       200:
+ *         description: No activity logged yet.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 report:
+ *                   type: string
+ *                   example: "No activity logged yet. Complete some tasks to generate a report."
+ *       500:
+ *         description: Internal Server Error or OpenAI API Error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                 details:
+ *                   type: string
+ */
 export async function GET() {
   try {
     const logFileContent = await fs.readFile(logFilePath, 'utf-8');

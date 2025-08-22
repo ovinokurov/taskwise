@@ -10,6 +10,58 @@ const openai = new OpenAI({
 const prisma = new PrismaClient();
 const logFilePath = path.join(process.cwd(), 'analytics.log');
 
+/**
+ * @swagger
+ * /api/chat-query:
+ *   post:
+ *     summary: Answers user questions about tasks using AI.
+ *     description: Receives a natural language question about tasks, fetches task data from the database and log entries, and uses an AI model (ChatGPT) to generate a comprehensive answer based on the provided data.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - question
+ *             properties:
+ *               question:
+ *                 type: string
+ *                 description: The natural language question about tasks.
+ *                 example: "How many tasks have I completed this week?"
+ *     responses:
+ *       200:
+ *         description: AI-generated answer to the question.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 answer:
+ *                   type: string
+ *                   description: The AI's answer based on the task data.
+ *       400:
+ *         description: Bad Request - Question is required.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Question is required"
+ *       500:
+ *         description: Internal Server Error or OpenAI API Error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                 details:
+ *                   type: string
+ */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
