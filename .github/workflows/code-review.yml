@@ -18,3 +18,4 @@ jobs:
         with:
           reporter: github-pr-review
           eslint_flags: 'src/**/*.{ts,tsx}'
+          level: info
