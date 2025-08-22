@@ -201,3 +201,96 @@ The application follows a standard client-server architecture with a Next.js fro
 -   **`eslint`**, **`eslint-config-next`**: For code linting.
 -   **`autoprefixer`**, **`@tailwindcss/postcss`**: For CSS processing.
 -   **`next-swagger-doc`**, **`swagger-ui-react`**: For generating and displaying API documentation.
+
+## User Flows
+
+### Creating a Task with AI Suggestions
+
+1.  **User Action:** The user navigates to the "New Task" page (`/tasks/new`) or opens the task creation modal.
+2.  **Frontend:** The user starts typing a task idea (e.g., "finish the report by friday") into the input field.
+3.  **Frontend:** After a short delay, the frontend sends the user's input to the `/api/suggest-task` endpoint in a `POST` request.
+4.  **Backend (`/api/suggest-task`):**
+    -   The API route receives the user's input.
+    -   It calls the OpenAI API with a prompt that asks the AI to generate a structured task (title, description, priority, due date) based on the input.
+    -   The AI returns a JSON object with the suggested task details.
+    -   The API route returns this JSON object to the frontend.
+5.  **Frontend:**
+    -   The frontend displays the AI's suggestion to the user.
+    -   The user can choose to "Accept" or "Clear" the suggestion.
+    -   If the user accepts, the task creation form is filled with the AI-generated details.
+6.  **User Action:** The user reviews the form and clicks "Add Task".
+7.  **Frontend:** The frontend sends a `POST` request to the `/api/tasks` endpoint with the task details.
+8.  **Backend (`/api/tasks`):**
+    -   The API route creates a new task in the database using Prisma.
+    -   It logs the `TASK_CREATED` event to the `analytics.log` file.
+9.  **Frontend:** The user is redirected to the home page, where they can see the new task on the calendar.
+
+### Generating a Productivity Report
+
+1.  **User Action:** The user navigates to the "Reports" page (`/reporting`).
+2.  **Frontend:** The user clicks the "Generate Report" button.
+3.  **Frontend:** The frontend sends a `GET` request to the `/api/analyze-logs` endpoint.
+4.  **Backend (`/api/analyze-logs`):**
+    -   The API route reads the `analytics.log` file.
+    -   It sends the entire content of the log file to the OpenAI API.
+    -   The prompt instructs the AI to act as a productivity analyst and generate a comprehensive report in a specific JSON format.
+    -   The AI analyzes the log data and returns a JSON object containing a summary, key metrics, chart data, and actionable insights.
+    -   The API route returns this JSON object to the frontend.
+5.  **Frontend:**
+    -   The frontend parses the report data.
+    -   It displays the key metrics in a grid.
+    -   It uses `react-chartjs-2` to render charts based on the chart data.
+    -   It uses `react-markdown` to display the AI-generated summary and insights.
+
+## Configuration Files Analysis
+
+-   **`next.config.ts`**: This file is for configuring Next.js. In this project, it is currently empty, meaning the project is using the default Next.js configuration.
+-   **`tailwind.config.ts`**: This file configures Tailwind CSS. It specifies the paths to the files that contain Tailwind classes, enables dark mode (`darkMode: "class"`), and can be used to extend the default theme.
+-   **`tsconfig.json`**: This is the TypeScript configuration file. It specifies the compiler options for the project, such as the target JavaScript version, module system, and which files to include in the compilation.
+
+## Deployment
+
+This application is ready to be deployed to [Vercel](https://vercel.com/), the creators of Next.js.
+
+1.  **Push to GitHub:** Ensure your code is pushed to a GitHub repository.
+2.  **Import Project on Vercel:**
+    -   Go to your Vercel dashboard and click "Add New..." > "Project".
+    -   Import the GitHub repository.
+3.  **Configure Environment Variables:**
+    -   In the project settings on Vercel, add the following environment variables:
+        -   `DATABASE_URL`: The connection string for your production PostgreSQL database.
+        -   `OPENAI_API_KEY`: Your OpenAI API key.
+4.  **Deploy:** Vercel will automatically build and deploy your application. Any subsequent pushes to the main branch will trigger a new deployment.
+
+## Testing
+
+This project does not currently have any tests. Here is a suggested setup for adding tests using [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
+
+1.  **Install Dependencies:**
+    ```bash
+    npm install --save-dev jest @types/jest @testing-library/react @testing-library/jest-dom
+    ```
+2.  **Configure Jest:** Create a `jest.config.js` file in the root of your project:
+    ```javascript
+    module.exports = {
+      setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+      testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
+      moduleNameMapper: {
+        '^@/components/(.*)
+: '<rootDir>/src/components/$1',
+      },
+      testEnvironment: 'jsdom',
+    };
+    ```
+3.  **Create Jest Setup File:** Create a `jest.setup.js` file in the root of your project:
+    ```javascript
+    import '@testing-library/jest-dom/extend-expect';
+    ```
+4.  **Add Test Script:** Add a `test` script to your `package.json`:
+    ```json
+    "scripts": {
+      ...
+      "test": "jest --watch"
+    }
+    ```
+5.  **Write Tests:** You can now create test files (e.g., `*.test.tsx`) and write tests for your components and functions.
